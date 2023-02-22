@@ -1,9 +1,14 @@
-//
-//  main.c
-//  ExoREV5Listes
-//
-//  Created by jeremy fouquet on 04/04/2022.
-//
+/*
+   # *******************************************************
+   # Nom ......... : main.c
+   # Rôle ........ : Exercices sur les listes en C
+   # Auteur ...... : Jeremy Fouquet
+   # Version ..... : V1 2022
+   # Licence ..... : Réalisé dans le cadre du cours de La Licence Informatique de L IED
+   # Compilation :  gcc main.c
+   # Execution : ./a.out
+   # *******************************************************
+*/
 
 #include <stdio.h> // puts(), printf()
 #include <stdlib.h> // exit()
