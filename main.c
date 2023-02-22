@@ -7,6 +7,7 @@
    # Licence ..... : Réalisé dans le cadre du cours de La Licence Informatique de L IED
    # Compilation :  gcc main.c
    # Execution : ./a.out
+   # Usage : remplacer|compter|majuscule (en fonction de l'option choisi) <fichier de sortie>
    # *******************************************************
 */
 
@@ -23,10 +24,10 @@ void usage(const string, const string); // prototype
 char * scan_file(const string);
 int compte_mots(const string);
 void copieChaine(string, string);
-void exercice_E_1(const string, char * argv[]) ; // prototype
+void exercice_E_1(const string, int argc, char * argv[]) ; // prototype
 void fonction_E_1_A(char * argv[]);
-void fonction_E_1_B(char * argv[]);
-void fonction_E_1_C(char * argv[]);
+void fonction_E_1_B();
+void fonction_E_1_C();
 void modification(char *, char *);
 int my_strcmp(const string, const string);
 list cons(string car, list L);
@@ -36,42 +37,39 @@ const int tailleMot = 32;
 int nbToto = 0;
 char motOrigine[tailleMot];
 char motChange[tailleMot];
-string filename;
-string copie;
+string filename = "fichier_in.txt";
+string copie = "fichier_out.txt";
 
 int main(int argc, const char * argv[]) {
     printf("%s\n", "E. Exercices sur les listes");
-    if (argc < 2) usage("Merci de renseigner les champs nécéssaire en ligne de commande", "remplacer|compter|majuscule (en fonction de l'option choisi) <fichier d'entrée> <fichier de sortie>") ;
-    exercice_E_1("E.1 Exercices en C", argv);
+    if (argc < 2) usage("Nombre d'arguments", "remplacer|compter|majuscule (en fonction de l'option choisi)") ;
+    exercice_E_1("E.1 Exercices en C", argc, argv);
     puts("");
     return 0;
 }
 
-void exercice_E_1(const string titre, char * argv[]) {
-    char * choix = argv[1];
+void exercice_E_1(const string titre, int argc, char * argv[]) {
+    char * choix = argv[1];    
     printf("\n%s\n", titre);
     if(my_strcmp("remplacer", choix) == 0) {
+        if (argc < 4) usage("Nombre d'arguments", "remplacer <mot à modifier> <mot modifié>") ;
         printf("\n%s\n", "A. Écrire un programme qui lit une liste de mots dans un fichier et remplace chaque occurrence d’un mot A par un autre mot B, les deux mots étant fournis sur la ligne de commande ainsi que le nom des fichiers d’entrée et de sortie :");
-        printf("\n%s\n", "> ExoREV5Listes <mot à remplacer> <mot de remplacement> <fichier d'entrée> <fichier de sortie>");
         puts("");
         fonction_E_1_A(argv);
     } else if (my_strcmp("compter", choix) == 0) {
         printf("\n%s\n", "B. Compte combien de fois ”toto” figure dans le fichier d’entrée. Le main() doit imprimer le résultat sur stdout. Note : pour tester si deux chaînes sont identiques, il faut utiliser la fonction strcmp() de la bibliothèque string.h ; en effet == (eql) ne teste que l’identité des pointeurs.");
-        fonction_E_1_B(argv);
+        fonction_E_1_B();
     } else if (my_strcmp("majuscule", choix) == 0) {
         printf("\n%s\n", " C. Écrire un programme qui lit une liste de mots dans un fichier et ne garde que les mots commençant par une majuscule. Utiliser l’algorithme de modification de liste. Le main() doit imprimer le résultat dans le fichier de sortie.");
-        fonction_E_1_C(argv);
+        fonction_E_1_C();
     } else {
-        usage("Merci de renseigner les champs nécéssaire en ligne de commande", "il faut choisir une option en premier argument parmis : \nremplacer\ncompter\nmajuscule") ;
+        usage("Valeur d'argument", "il faut choisir une option en premier argument parmis remplacer ou compter ou majuscule") ;
     }
 }
 
 void fonction_E_1_A(char * argv[]) {
-    if (argv < 5) usage("Merci de renseigner les champs nécéssaire en ligne de commande", "remplacer <mot à modifier> <mot modifié> <fichier d'entrée> <fichier de sortie>") ;
     copieChaine(motOrigine, argv[2]);
     copieChaine(motChange, argv[3]);
-    filename = argv[4];
-    copie = argv[5];
     printf("Vous souhaitez modifier le mot : %s en %s\n", motOrigine, motChange);
     printf("Nom du fichie original : %s\n", filename);
     printf("Nom du noveau fichier : %s\n", copie);
@@ -100,9 +98,7 @@ void fonction_E_1_A(char * argv[]) {
 
 }
 
-void fonction_E_1_B(char * argv[]) {
-    if (argv < 2) usage("Merci de renseigner les champs nécéssaire en ligne de commande", "compter <fichier d'entrée>") ;
-    filename = argv[2];
+void fonction_E_1_B() {  
     int nb_mots = compte_mots(filename) ;
     FILE * R = fopen(filename, "r") ; // ouvre le canal R en mode "r" pour filename
     if (! R) usage(filename, "Le fichier est introuvable") ; // si pas de fichier message erreur exit
@@ -121,10 +117,7 @@ void fonction_E_1_B(char * argv[]) {
     fclose(R) ; // ferme le canal
 }
 
-void fonction_E_1_C(char * argv[]) {
-    if (argv < 3) usage("Merci de renseigner les champs nécéssaire en ligne de commande", "majuscule <fichier d'entrée> <fichier sortie>") ;
-    filename = argv[2];
-    copie = argv[3];
+void fonction_E_1_C() {
     int nb_mots = compte_mots(filename) ;
     FILE * R = fopen(filename, "r") ; // ouvre le canal R en mode "r" pour filename
     if (! R) usage(filename, "Le fichier est introuvable") ; // si pas de fichier message erreur exit
@@ -146,7 +139,6 @@ void fonction_E_1_C(char * argv[]) {
         L=L->cdr;
 
     }
-    printf("\n%s\n", "Je n'ai pas utilisé d'algorithme de remplacement ici car je ne comprend pas l'interet. En effet on souhaite conserver et donc filtrer une liste et non pas remplacer un element, autant j'aurai comprit s'il aurait été demandé de l'utiliser pour l'exercice A mais pour celui ci je ne vois pas comment l'utiliser donc je ne l'utilise pas.");
     fclose(R) ; // ferme le canal
     fclose(W) ; // ferme le canal
 }
@@ -216,4 +208,3 @@ void usage(const string E, const string D) {
     printf("Detail : %s\n", D);
     exit(1) ;
 }
-
